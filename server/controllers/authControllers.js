@@ -1,6 +1,6 @@
-const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
 
 const register = async (req, res) => {
   try {
@@ -52,7 +52,7 @@ const login = async (req, res) => {
   if (!matched) {
     return res.status(406).json({ message: "Credential not found" });
   }
-  // crete signed jwt
+  // create signed jwt
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });

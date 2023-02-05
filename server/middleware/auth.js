@@ -28,9 +28,4 @@ const isAdmin = async (req, res, next) => {
   }
 };
 
-// testing purpose
-const secret = async (req, res) => {
-  return res.json({ message: "Hi admin" });
-};
-
-module.exports = { requireSignIn, isAdmin, secret };
+module.exports = { requireSignIn, isAdmin };
