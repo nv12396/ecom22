@@ -6,6 +6,7 @@ const {
   read,
   photo,
   remove,
+  update,
 } = require("../controllers/productControllers");
 const formidable = require("express-formidable");
 
@@ -22,5 +23,6 @@ router.delete(
 router.get("/all", list);
 router.get("/:slug", read);
 router.get("/photo/:productId", photo);
+router.put("/update/:productId", requireSignIn, isAdmin, formidable(), update);
 
 module.exports = router;

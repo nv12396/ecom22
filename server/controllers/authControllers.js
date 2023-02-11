@@ -4,7 +4,8 @@ const User = require("../models/user");
 
 const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { formData } = req.body;
+    const { name, email, password } = formData;
     // check if user Exist
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -40,7 +41,8 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { formData } = req.body;
+  const { email, password } = formData;
   // check if user Exist
   const user = await User.findOne({ email });
   if (!user) {

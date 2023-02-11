@@ -103,4 +103,52 @@ const remove = async (req, res) => {
   } catch (error) {}
 };
 
-module.exports = { create, list, read, photo, remove };
+const update = async (req, res) => {
+  try {
+    // we can send form data instead of JSON when we want to upload from desktopn npr pictures.
+    // we need to install express-formidable and apply in our routes
+    // request data can be found in req.fields
+    const { name, description, price, category, quantity, shipping } =
+      req.fields;
+    // we need to use same name as in our request
+    const { photo } = req.files;
+
+    //validation
+    switch (true) {
+      case !name.trim():
+        res.json({ error: "Name is required" });
+      case !description.trim():
+        res.json({ error: "description is required" });
+      case !price.trim():
+        res.json({ error: "price is required" });
+      case !category.trim():
+        res.json({ error: "category is required" });
+      case !quantity.trim():
+        res.json({ error: "quantity is required" });
+      case !shipping.trim():
+        res.json({ error: "shipping is required" });
+      case photo && photo.size > 1000000:
+        res.json({ error: "Image should be less than 1mb in size" });
+    }
+    const { productId } = req.params;
+    const product = await Products.findByIdAndUpdate(
+      productId,
+      {
+        ...req.fields,
+        slug: slugify(name),
+      },
+      { new: true }
+    );
+    if (photo) {
+      product.photo.data = fs.readFileSync(photo.path);
+      product.photo.contentType = photo.type;
+    }
+
+    await product.save();
+    res.json(product);
+  } catch (error) {
+    // res.status(400).json({ message: error.message });
+  }
+};
+
+module.exports = { create, list, read, photo, remove, update };
